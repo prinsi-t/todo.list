@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title || 'Todo App' %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="/favicon.ico" type="image/png">
+  <!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="manifest" href="/site.webmanifest">
+</head>
+<body>
+<h2>Your Todos</h2>
+<form action="/todos" method="POST">
+  <input type="text" name="text" placeholder="New todo" required>
+  <button type="submit">Add</button>
+</form>
+<ul class="mt-4 space-y-2 max-w-md mx-auto">
+  <% todos.forEach(todo => { %>
+    <li class="p-3 bg-white rounded shadow flex items-center justify-between">
+      <%= todo.text %> - <%= todo.completed ? '✅' : '' %>
+      <% if (!todo.completed) { %>
+        <form action="/todos/<%= todo._id %>/complete" method="POST" style="display:inline">
+          <button type="submit">Complete</button>
+        </form>
+      <% } %>
+      <form action="/todos/<%= todo._id %>?_method=DELETE" method="POST" style="display:inline">
+        <button type="submit">Delete</button>
+      </form>
+    </li>
+  <% }) %>
+</ul>
+</body>
+</html>

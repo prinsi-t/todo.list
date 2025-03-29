@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title || 'Todo App' %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="/favicon.ico" type="image/png">
+  <!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="manifest" href="/site.webmanifest">
+</head>
+<body>
+  <div class="container">
+    <% if (user) { %>
+      <p>Welcome, <%= user.name %> | <a href="/auth/logout">Logout</a></p>
+    <% } %>
+    <%- body %>
+  </div>
+</body>
+</html>

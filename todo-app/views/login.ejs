@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Todo App</title>
+</head>
+<body class="bg-[#121212] text-[#f5f5f5] font-sans p-5">
+  <div class="max-w-xl mx-auto">
+    <h2 class="text-2xl font-semibold mb-4">Login</h2>
+    <form action="/auth/login" method="POST" class="space-y-3">
+      <input 
+        type="email" 
+        name="email" 
+        placeholder="Email" 
+        required 
+        class="w-full p-2 bg-[#1e1e1e] text-white border border-[#333] rounded"
+      >
+      <input 
+        type="password" 
+        name="password" 
+        placeholder="Password" 
+        required 
+        class="w-full p-2 bg-[#1e1e1e] text-white border border-[#333] rounded"
+      >
+      <button 
+        type="submit" 
+        class="p-2 bg-[#1e1e1e] text-white border border-[#333] hover:bg-[#333] rounded"
+      >
+        Login
+      </button>
+    </form>
+
+    <a href="/auth/google" class="block mt-4 text-[#4da6ff] hover:underline">Login with Google</a>
+    <p class="mt-2">
+      Don't have an account?
+      <a href="/auth/register" class="text-[#4da6ff] hover:underline">Register</a>
+    </p>
+  </div>
+</body>
+
+</html>
+
