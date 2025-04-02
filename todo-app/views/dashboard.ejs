@@ -5,13 +5,12 @@
   <title><%= title || 'Todo App' %></title>
   <link rel="stylesheet" href="/css/style.css">
   <link rel="icon" href="/favicon.ico" type="image/png">
-  <!-- Tailwind CSS CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
 
   <link rel="manifest" href="/site.webmanifest">
 </head>
 <body>
-<h2>Your Todos</h2>
+<!-- <h2>Your Todos</h2>
 <form action="/todos" method="POST">
   <input type="text" name="text" placeholder="New todo" required>
   <button type="submit">Add</button>
@@ -31,5 +30,44 @@
     </li>
   <% }) %>
 </ul>
+
+<form action="/logout" method="POST">
+  <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded">Logout</button>
+</form>
+ -->
+ <h2 class="text-2xl font-semibold mb-4">Your Todos</h2>
+
+
+ <form action="/todos" method="POST" class="mb-4">
+   <input type="text" name="text" placeholder="New todo" required class="border-2 border-gray-300 p-2 rounded-l-md w-2/3">
+   <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-r-md">Add</button>
+ </form>
+ 
+ 
+ <ul class="mt-4 space-y-2 max-w-md mx-auto">
+   <% todos.forEach(todo => { %>
+     <li class="p-3 bg-gray-800 text-white rounded shadow flex items-center justify-between">
+       <%= todo.text %> - <%= todo.completed ? '✅' : '' %>
+ 
+       
+       <% if (!todo.completed) { %>
+         <form action="/todos/<%= todo._id %>/complete" method="POST" style="display:inline">
+           <button type="submit" class="bg-green-500 text-white px-4 py-1 rounded">Complete</button>
+         </form>
+       <% } %>
+ 
+      
+       <form action="/todos/<%= todo._id %>?_method=DELETE" method="POST" style="display:inline">
+         <button type="submit" class="bg-red-500 text-white px-4 py-1 rounded">Delete</button>
+       </form>
+     </li>
+   <% }) %>
+ </ul>
+ 
+
+ <form action="/logout" method="POST" class="mt-4">
+   <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded w-full">Logout</button>
+ </form>
+ 
 </body>
 </html>

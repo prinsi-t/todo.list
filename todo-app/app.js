@@ -9,6 +9,7 @@ import passportConfig from './config/passport.js';
 import indexRoutes from './routes/index.js';
 import authRoutes from './routes/auth.js';
 
+import User from './models/User.js';
 const app = express();
 
 dotenv.config();
@@ -20,7 +21,6 @@ mongoose.connect(process.env.MONGO_URI, {
 }).then(() => console.log('MongoDB connected'))
   .catch((err) => console.log(err));
 
-  import User from './models/User.js';
 
 // This will remove the unnecessary index on 'username' field
 mongoose.connection.once('open', async () => {
@@ -41,14 +41,17 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(methodOverride('_method'));
+
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false
 }));
-app.use(flash());
+
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
+app.use(authRoutes);
 
 app.use((req, res, next) => {
   res.locals.user = req.user || null;

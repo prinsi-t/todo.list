@@ -7,20 +7,25 @@ const passportConfig = (passport) => {
   passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
     try {
       const user = await User.findOne({ email });
+  
       if (!user) return done(null, false, { message: 'No user found' });
-      
-      if (!user.password) {
-        return done(null, false, { message: 'This account uses Google login' });
+  
+      if (typeof user.password !== 'string') {
+        return done(null, false, { message: 'Password not set for this account' });
       }
-      
+  
       const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) return done(null, false, { message: 'Incorrect password' });
-      
-      return done(null, user);
+      return isMatch ? done(null, user) : done(null, false, { message: 'Incorrect password' });
+  
     } catch (err) {
       return done(err);
     }
   }));
+  
+
+  
+
+  
 
   passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,

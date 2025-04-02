@@ -8,56 +8,67 @@ const router = express.Router();
 router.get('/login', (req, res) => res.render('login', { title: 'Login' }));
 router.get('/register', (req, res) => res.render('register', { title: 'Register' }));
 
-/* router.post('/register', async (req, res, next) => {
-  const { name, email, password } = req.body;
-  const existingUser = await User.findOne({ email });
-  if (existingUser) return res.redirect('/auth/register');
-  const hashed = await bcrypt.hash(password, 10);
-  const newUser = new User({ name, email, password: hashed });
-  await newUser.save();
-  req.login(newUser, (err) => {
-    if (err) {
-      console.error('Login after registration failed:', err);
-      return next(err);
-    }
-    console.log('Auto-login success. Redirecting to dashboard...');
-    return res.redirect('/dashboard');
-  });
-  
-  
-}); */
-router.post('/register', async (req, res, next) => {
-  const { name, email, password } = req.body;
 
-  // Validate inputs
-  if (!name || !email || !password) {
-    req.flash('error_msg', 'All fields are required');
-    return res.redirect('/auth/register');
+// router.post('/register', async (req, res, next) => {
+//   const { name, email, password } = req.body;
+
+//   if (!name || !email || !password) {
+//     req.flash('error_msg', 'Please fill all fields');
+//     return res.redirect('/auth/register');
+//   }
+
+//   try {
+//     const existingUser = await User.findOne({ email });
+
+//     if (existingUser) {
+//       req.flash('error_msg', 'User already exists. Please login.');
+//       return res.redirect('/auth/login');
+//     }
+
+//     const hashed = await bcrypt.hash(password, 10);
+//     const newUser = new User({ name, email, password: hashed });
+
+//     await newUser.save();
+
+//     req.login(newUser, (err) => {
+//       if (err) return next(err);
+//       return res.redirect('/dashboard');
+//     });
+//   } catch (err) {
+//     console.error(err);
+//     res.redirect('/auth/register');
+//   }
+// });
+router.post("/register", async (req, res) => {
+  console.log(req.body);
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    console.error("❌ Registration failed: Missing username or password");
+    return res.status(400).send("Missing username or password");
   }
 
   try {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      req.flash('error_msg', 'Email already registered');
-      return res.redirect('/auth/register');
-    }
+    const user = new User({ username });
 
-    const hashed = await bcrypt.hash(password, 10);
-    const newUser = new User({ name, email, password: hashed });
-    await newUser.save();
+    // Register the user (this hashes the password)
+    const registeredUser = await User.register(user, password);
 
-    req.login(newUser, (err) => {
-      if (err) return next(err);
-      return res.redirect('/dashboard');
+    // Immediately log them in after registration
+    req.login(registeredUser, (err) => {
+      if (err) {
+        console.error("Auto-login error:", err);
+        return res.status(500).send("Login failed after registration");
+      }
+      res.redirect("/dashboard");
     });
   } catch (err) {
-    console.error(err);
-    req.flash('error_msg', 'Something went wrong');
-    res.redirect('/auth/register');
+    console.error("Registration failed:", err);
+    res.status(500).send("Error registering user");
   }
-  console.log('Registering:', name, email);
-
 });
+
+
 
 
 router.post('/login', passport.authenticate('local', {
@@ -75,5 +86,16 @@ router.get('/google/callback', passport.authenticate('google', {
 router.get('/logout', (req, res) => {
   req.logout(() => res.redirect('/auth/login'));
 });
+
+router.post("/logout", (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      console.error("Logout error:", err);
+      return res.redirect("/dashboard");
+    }
+    res.redirect("/login");
+  });
+});
+
 
 export default router; 

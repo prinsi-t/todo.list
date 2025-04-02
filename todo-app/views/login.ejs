@@ -8,6 +8,16 @@
 <body class="bg-[#121212] text-[#f5f5f5] font-sans p-5">
   <div class="max-w-xl mx-auto">
     <h2 class="text-2xl font-semibold mb-4">Login</h2>
+    <% if (error_msg) { %>
+      <div class="mb-3 text-red-400 bg-red-900 p-2 rounded"><%= error_msg %></div>
+    <% } %>
+    <% if (error) { %>
+      <div class="mb-3 text-red-400 bg-red-900 p-2 rounded"><%= error %></div>
+    <% } %>
+    <% if (success_msg) { %>
+      <div class="mb-3 text-green-400 bg-green-900 p-2 rounded"><%= success_msg %></div>
+    <% } %>
+    
     <form action="/auth/login" method="POST" class="space-y-3">
       <input 
         type="email" 

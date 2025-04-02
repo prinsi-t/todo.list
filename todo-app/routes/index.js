@@ -17,6 +17,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/dashboard', ensureAuth, async (req, res) => {
+  console.log(req.user); // debug
   const todos = await Todo.find({ user: req.user.id });
   res.render('dashboard', { todos, title: 'Dashboard' });
   console.log('Authenticated user:', req.user);
